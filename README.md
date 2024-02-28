@@ -31,7 +31,7 @@ After installation, the Tampermonkey icon should appear in your browser's extens
 
 ### Step 1: Installing Script 
 
-1. Go to this link [here](https://raw.githubusercontent.com/wattsoner/Vine-Review-Helper/master/Amazon-Review-Helper.user.js) and click the "Install" button. Sometimes, it might show as "Reinstall" instead; click this anyway.
+1. Go to this link [here](https://raw.githubusercontent.com/wattsoner/Vine-Review-Helper/master/AmazonReviewHelper.user.js) and click the "Install" button. Sometimes, it might show as "Reinstall" instead; click this anyway.
    
 ### Step 2: Save and Activate
 
