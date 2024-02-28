@@ -40,9 +40,52 @@ After installation, the Tampermonkey icon should appear in your browser's extens
 
 ### Step 2: Reload Amazon Page
 
-1. Navigate to the Amazon Reviews Webpage [here](https://www.amazon.co.uk/review/create-review) (note, this link might not work depending on your country's TLD).
+1. Navigate to the Amazon Reviews Webpage [here](https://www.amazon.co.uk/review/create-review) (note: this link might only work if your country's TLD).
 2. reload the page by pressing `F5` or clicking the reload button in your browser.
 3. The user script should now be operational, and you should see the changes applied by `Amazon-Review-Helper.js`.
+
+
+
+## How To find your webhook
+
+```
+Step 1: Create or Select Your Discord Server
+```
+
+*For a new server*
+
+Open Discord and log in.
+Click the "+" icon on the left sidebar to create a new server.
+Follow the prompts to set up your server.
+
+*For an Existing Server*
+
+Open Discord and log in.
+Select the server you own from the left sidebar.
+
+```
+Step 2: Create a Text Channel
+```
+
+Right-click on your server name on the left sidebar.
+Select "Create Channel."
+Choose "Text Channel," give it a name, and click "Create."
+
+```
+Step 3: Create a Webhook
+```
+
+You can just navigate to the text channel you want to use (either an existing one or the one you just created).
+Click on the settings gear icon next to the channel name.
+Scroll down and select "Integrations."
+Click on "Create Webhook" or "View Webhooks" and then "New Webhook."
+Could you give your webhook a name and select the channel to post messages?
+Click "Copy Webhook URL." This is your Discord webhook URL.
+
+```
+Step 4: Use Your Webhook
+```
+You can now use this webhook URL, click the ⚙️ emoji (to enter settings) ,put the URL in the "Discord Webhook URL" textbox, then click `save.`
 
 
 ## Roadmap
