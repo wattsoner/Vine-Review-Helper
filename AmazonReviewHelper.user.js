@@ -5,12 +5,19 @@
 // @description  Assistant in writing Reviews for amazon, with a custom template inserter and review backups using Discord Webhooks.
 // @author       Wattie :3
 // @match        https://www.amazon.co.uk/review/create-review*
-// @match        https://www.amazon.co.com/review/create-review*
+// @match        https://www.amazon.com/review/create-review*
 // @match        https://www.amazon.co.ca/review/create-review*
 // @match        https://www.amazon.co.fr/review/create-review*
 // @match        https://www.amazon.co.es/review/create-review*
 // @match        https://www.amazon.co.jp/review/create-review*
 // @match        https://www.amazon.co.it/review/create-review*
+// @match        https://www.amazon.co.uk/reviews/create-review*
+// @match        https://www.amazon.com/reviews/create-review*
+// @match        https://www.amazon.co.ca/reviews/create-review*
+// @match        https://www.amazon.co.fr/reviews/create-review*
+// @match        https://www.amazon.co.es/reviews/create-review*
+// @match        https://www.amazon.co.jp/reviews/create-review*
+// @match        https://www.amazon.co.it/reviews/create-review*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
