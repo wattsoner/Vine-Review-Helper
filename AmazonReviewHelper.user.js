@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon Review Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.1.2
 // @description  Assistant in writing Reviews for amazon, with a custom template inserter and review backups using Discord Webhooks.
 // @author       Wattie :3
 // @match        https://www.amazon.co.uk/review/create-review*
@@ -29,54 +29,59 @@
 (function() {
     'use strict';
 
-    GM_addStyle(`
-        .custom-settings-dropdown {
-            display: none;
-            position: fixed;
-            background-color: #f9f9f9;
-            min-width: 250px;
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-            padding: 12px 16px;
-            z-index: 1000;
-            top: 20px; right: 20px;
-            border-radius: 5px;
-        }
+   GM_addStyle(`
+    .custom-settings-dropdown {
+        display: none;
+        position: fixed;
+        background-color: #f9f9f9;
+        min-width: 250px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        padding: 12px 16px;
+        z-index: 1000;
+        top: 20px; right: 20px;
+        border-radius: 5px;
+    }
 
-        .custom-settings-dropdown input[type="text"],
-        .custom-settings-dropdown textarea,
-        .custom-settings-dropdown button {
-            width: 100%;
-            padding: 8px;
-            margin: 4px 0;
-            box-sizing: border-box;
-        }
+    .custom-settings-dropdown input[type="text"],
+    .custom-settings-dropdown textarea,
+    .custom-settings-dropdown button {
+        width: 100%;
+        padding: 8px;
+        margin: 4px 0;
+        box-sizing: border-box;
+        border: 1px solid #2ecc71 !important; /* Mint Green border for a calm look */
+        outline-color: #2ecc71 !important; /* Changes the focus outline to match the border */
+    }
 
-        .custom-settings-dropdown-btn, .custom-button {
-            cursor: pointer;
-            font-size: 16px;
-            color: white;
-            padding: 8px 15px;
-            margin: 5px;
-            border-radius: 4px;
-            font-weight: bold;
-            text-shadow: 0 1px 0 rgba(0,0,0,.2);
-        }
+    .custom-settings-dropdown-btn, .custom-button {
+        cursor: pointer;
+        font-size: 16px;
+        color: white;
+        padding: 8px 15px;
+        margin: 5px;
+        border-radius: 4px;
+        font-weight: bold;
+        text-shadow: 0 1px 0 rgba(0,0,0,.2);
+    }
 
-        .custom-settings-button {
-            background-color: grey !important; /* Grey */
-            border: 1px solid grey !important;
-        }
+    .custom-insert-button {
+        background-color: #3498db !important; /* Soft Blue */
+        border: 1px solid #2980b9 !important;
+    }
 
-        .custom-send-button {
-            background-color: #7289DA !important; /* Discord Blue */
-            border: 1px solid grey !important;
-        }
+     .custom-send-button {
+        background-color: #7289DA !important; /* Discord Blue */
+        border: 1px solid #6271C3 !important;
+    }
 
-        .custom-insert-button {
-            background-color: #f0c14b !important; /* Submit Review Button Yellow */
-            border: 1px solid grey !important;
-        }
-    `);
+    .custom-insert-product-title-button {
+        background-color: #95a5a6 !important; /* Grey */
+        border: 1px solid #7f8c8d !important;
+    }
+
+
+`);
+
 
     const settingsDropdown = document.createElement("div");
     settingsDropdown.className = "custom-settings-dropdown";
@@ -133,6 +138,31 @@
         if (reviewTextArea && predefinedText) {
             const newText = predefinedText.split('\n').join('\n');
             reviewTextArea.value += newText;
+        }
+    }
+
+    function insertProductTitle() {
+        const reviewTextArea = document.querySelector('textarea[id="scarface-review-text-card-title"]');
+        const productTitle = document.querySelector('span[data-hook="ryp-product-title"]').innerText;
+        if (reviewTextArea && productTitle) {
+            if (document.selection) {
+                reviewTextArea.focus();
+                var sel = document.selection.createRange();
+                sel.text = productTitle;
+                reviewTextArea.focus();
+            } else if (reviewTextArea.selectionStart || reviewTextArea.selectionStart === '0') {
+                var startPos = reviewTextArea.selectionStart;
+                var endPos = reviewTextArea.selectionEnd;
+                var beforeText = reviewTextArea.value.substring(0, startPos);
+                var afterText = reviewTextArea.value.substring(endPos, reviewTextArea.value.length);
+                reviewTextArea.value = beforeText + productTitle + afterText;
+                reviewTextArea.focus();
+                reviewTextArea.selectionStart = startPos + productTitle.length;
+                reviewTextArea.selectionEnd = startPos + productTitle.length;
+            } else {
+                reviewTextArea.value += productTitle;
+                reviewTextArea.focus();
+            }
         }
     }
 
@@ -233,22 +263,24 @@ function sendToDiscord() {
         settingsDropdown.style.display = settingsDropdown.style.display === "block" ? "none" : "block";
     }
 
-    function checkAndAddButtons() {
+     function checkAndAddButtons() {
         const container = document.querySelector('div[data-hook="ryp-review-text-input"]');
-        if (container && !document.querySelector('.custom-button')) {
+        if (container && !document.querySelector('.custom-insert-product-title-button')) {
+            addButton("Insert Product Title", insertProductTitle, "insert-product-title-button");
             addButton("Insert Template", insertPredefinedText, "insert-button");
             addButton("Send to Discord", sendToDiscord, "send-button");
             addIconButton("⚙️", toggleSettingsDropdown);
+
         }
     }
 
-    checkAndAddButtons();
+    checkAndAddButtons(); // Initial call to add buttons
 
     const observer = new MutationObserver(mutations => {
         for (const mutation of mutations) {
             if (mutation.addedNodes.length > 0) {
                 checkAndAddButtons();
-                break;
+                break; // Exit loop once buttons are checked/added to avoid unnecessary checks
             }
         }
     });
