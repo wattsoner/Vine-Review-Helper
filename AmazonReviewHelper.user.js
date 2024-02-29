@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon Review Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.1.1
 // @description  Assistant in writing Reviews for amazon, with a custom template inserter and review backups using Discord Webhooks.
 // @author       Wattie :3
 // @match        https://www.amazon.co.uk/review/create-review*
