@@ -229,27 +229,29 @@ function sendToDiscord() {
     }
 }
 
-    function toggleSettingsDropdown() {
+     function toggleSettingsDropdown() {
         settingsDropdown.style.display = settingsDropdown.style.display === "block" ? "none" : "block";
     }
 
+    function checkAndAddButtons() {
+        const container = document.querySelector('div[data-hook="ryp-review-text-input"]');
+        if (container && !document.querySelector('.custom-button')) {
+            addButton("Insert Template", insertPredefinedText, "insert-button");
+            addButton("Send to Discord", sendToDiscord, "send-button");
+            addIconButton("⚙️", toggleSettingsDropdown);
+        }
+    }
+
+    checkAndAddButtons();
+
     const observer = new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-            if (!mutation.addedNodes) return;
-
-            for (let i = 0; i < mutation.addedNodes.length; i++) {
-                if (mutation.addedNodes[i].querySelector('div[data-hook="ryp-review-text-input"]')) {
-                    addButton("Insert Template", insertPredefinedText, "insert-button");
-                    addButton("Send to Discord", sendToDiscord, "send-button");
-                    addIconButton("⚙️", toggleSettingsDropdown);
-                    break;
-                }
+        for (const mutation of mutations) {
+            if (mutation.addedNodes.length > 0) {
+                checkAndAddButtons();
+                break;
             }
-        });
+        }
     });
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+    observer.observe(document.body, { childList: true, subtree: true });
 })();
