@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon Review Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1.2
+// @version      0.1.3
 // @description  Assistant in writing Reviews for amazon, with a custom template inserter and review backups using Discord Webhooks.
 // @author       Wattie :3
 // @match        https://www.amazon.co.uk/review/create-review*
@@ -248,14 +248,14 @@ function sendToDiscord() {
                 }]
             }),
             onload: function(response) {
-                alert("Embed sent to Discord!");
+                alert("Your review has been sucessfully sent to discord & archived.");
             },
             onerror: function(error) {
-                console.error("Error sending to Discord:", error);
+                console.error("uh oh! there's been an error sending your review to discord: ", error);
             }
         });
     } else {
-        console.log("Discord webhook URL is missing.");
+        console.log("missing Webhook URL, please add it to settings.");
     }
 }
 
@@ -274,13 +274,13 @@ function sendToDiscord() {
         }
     }
 
-    checkAndAddButtons(); // Initial call to add buttons
+    checkAndAddButtons();
 
     const observer = new MutationObserver(mutations => {
         for (const mutation of mutations) {
             if (mutation.addedNodes.length > 0) {
                 checkAndAddButtons();
-                break; // Exit loop once buttons are checked/added to avoid unnecessary checks
+                break;
             }
         }
     });
