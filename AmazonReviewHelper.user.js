@@ -9,7 +9,6 @@
 // @match        https://www.amazon.ca/review/create-review*
 // @match        https://www.amazon.fr/review/create-review*
 // @match        https://www.amazon.es/review/create-review*
-// @match        https://www.amazon.jp/review/create-review*
 // @match        https://www.amazon.it/review/create-review*
 // @match        https://www.amazon.de/review/create-review*
 // @match        https://www.amazon.co.uk/reviews/create-review*
@@ -17,7 +16,6 @@
 // @match        https://www.amazon.ca/reviews/create-review*
 // @match        https://www.amazon.fr/reviews/create-review*
 // @match        https://www.amazon.es/reviews/create-review*
-// @match        https://www.amazon.jp/reviews/create-review*
 // @match        https://www.amazon.it/reviews/create-review*
 // @match        https://www.amazon.de/reviews/create-review*
 // @grant        GM_setValue
@@ -49,7 +47,7 @@
         padding: 8px;
         margin: 4px 0;
         box-sizing: border-box;
-        border: 1px solid #2ecc71 !important; /* Mint Green border for a calm look */
+        border: 1px solid #2ecc71 !important; /* Mint Green border */
         outline-color: #2ecc71 !important; /* Changes the focus outline to match the border */
     }
 
@@ -175,10 +173,8 @@ function sendToDiscord() {
     const webhookAvatarUrl = "https://www.commercerev.com/storage/2020/09/AmazonVineLogo-150x150.png";
     const webhookName = "Vine Review Archiver";
 
-    // Array to store the names of missing fields
     const missingFields = [];
 
-    // Check if any of the required fields are blank and add the missing field names to the array
     if (!discordWebhookUrl) {
         missingFields.push("Discord Webhook URL");
     }
@@ -189,13 +185,11 @@ function sendToDiscord() {
         missingFields.push("Review Title");
     }
 
-    // Check if any filled stars are detected
     const filledStars = document.querySelectorAll('.ryp__star__button img[src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzgiIGhlaWdodD0iMzUiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeDE9IjUwJSIgeDI9IjUwJSIgeTE9IjI3LjY1JSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkNFMDAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkE3MDAiLz48L2xpbmVhckdyYWRpZW50PjxwYXRoIGlkPSJiIiBkPSJNMTkgMGwtNS44NyAxMS41MkwwIDEzLjM3bDkuNSA4Ljk3TDcuMjYgMzUgMTkgMjkuMDIgMzAuNzUgMzVsLTIuMjQtMTIuNjYgOS41LTguOTctMTMuMTMtMS44NXoiLz48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48dXNlIGZpbGw9InVybCgjYSkiIHhsaW5rOmhyZWY9IiNiIi8+PHBhdGggc3Ryb2tlPSIjQTI2QTAwIiBzdHJva2Utb3BhY2l0eT0iLjc1IiBkPSJNMTkgMS4xbC01LjU0IDEwLjg4TDEuMSAxMy43Mmw4Ljk0IDguNDRMNy45MiAzNC4xIDE5IDI4LjQ2bDExLjA4IDUuNjQtMi4xMS0xMS45NCA4Ljk0LTguNDQtMTIuMzYtMS43NEwxOSAxLjF6Ii8+PC9nPjwvc3ZnPg=="]');
     if (filledStars.length === 0) {
         missingFields.push("Filled Stars");
     }
 
-    // If there are missing fields, display an alert with the list of missing fields
     if (missingFields.length > 0) {
         const missingFieldsMessage = "Please fill in the following fields before sending the review:\n- " + missingFields.join("\n- ");
         alert(missingFieldsMessage);
