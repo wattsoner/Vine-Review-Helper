@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon Review Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1.4
+// @version      0.1.5
 // @description  Assistant in writing Reviews for amazon, with a custom template inserter and review backups using Discord Webhooks.
 // @author       Wattie :3
 // @match        https://www.amazon.co.uk/review/create-review*
@@ -47,7 +47,7 @@
         padding: 8px;
         margin: 4px 0;
         box-sizing: border-box;
-        border: 1px solid #2ecc71 !important; /* Mint Green border */
+        border: 1px solid #2ecc71 !important; /* Mint Green border for a calm look */
         outline-color: #2ecc71 !important; /* Changes the focus outline to match the border */
     }
 
@@ -170,7 +170,7 @@ function sendToDiscord() {
     const productName = document.querySelector('span[data-hook="ryp-product-title"]').innerText;
     const productImageUrl = document.querySelector('div[data-hook="ryp-product-image-container"] img').getAttribute('src');
     const headline = document.querySelector('input[data-hook="ryp-review-title-input"]').value;
-    const webhookAvatarUrl = "https://www.commercerev.com/storage/2020/09/AmazonVineLogo-150x150.png";
+    const webhookAvatarUrl = "https://raw.githubusercontent.com/wattsoner/Vine-Review-Helper/main/images/Vine-Logo.png";
     const webhookName = "Vine Review Archiver";
 
     const missingFields = [];
@@ -306,5 +306,6 @@ function sendToDiscord() {
         }
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, {
+        childList: true, subtree: true});
 })();
