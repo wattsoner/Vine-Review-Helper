@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon Review Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1.3
+// @version      0.1.4
 // @description  Assistant in writing Reviews for amazon, with a custom template inserter and review backups using Discord Webhooks.
 // @author       Wattie :3
 // @match        https://www.amazon.co.uk/review/create-review*
@@ -174,6 +174,33 @@ function sendToDiscord() {
     const headline = document.querySelector('input[data-hook="ryp-review-title-input"]').value;
     const webhookAvatarUrl = "https://www.commercerev.com/storage/2020/09/AmazonVineLogo-150x150.png";
     const webhookName = "Vine Review Archiver";
+
+    // Array to store the names of missing fields
+    const missingFields = [];
+
+    // Check if any of the required fields are blank and add the missing field names to the array
+    if (!discordWebhookUrl) {
+        missingFields.push("Discord Webhook URL");
+    }
+    if (!reviewText) {
+        missingFields.push("Review Text");
+    }
+    if (!headline) {
+        missingFields.push("Review Title");
+    }
+
+    // Check if any filled stars are detected
+    const filledStars = document.querySelectorAll('.ryp__star__button img[src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzgiIGhlaWdodD0iMzUiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeDE9IjUwJSIgeDI9IjUwJSIgeTE9IjI3LjY1JSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkNFMDAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkE3MDAiLz48L2xpbmVhckdyYWRpZW50PjxwYXRoIGlkPSJiIiBkPSJNMTkgMGwtNS44NyAxMS41MkwwIDEzLjM3bDkuNSA4Ljk3TDcuMjYgMzUgMTkgMjkuMDIgMzAuNzUgMzVsLTIuMjQtMTIuNjYgOS41LTguOTctMTMuMTMtMS44NXoiLz48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48dXNlIGZpbGw9InVybCgjYSkiIHhsaW5rOmhyZWY9IiNiIi8+PHBhdGggc3Ryb2tlPSIjQTI2QTAwIiBzdHJva2Utb3BhY2l0eT0iLjc1IiBkPSJNMTkgMS4xbC01LjU0IDEwLjg4TDEuMSAxMy43Mmw4Ljk0IDguNDRMNy45MiAzNC4xIDE5IDI4LjQ2bDExLjA4IDUuNjQtMi4xMS0xMS45NCA4Ljk0LTguNDQtMTIuMzYtMS43NEwxOSAxLjF6Ii8+PC9nPjwvc3ZnPg=="]');
+    if (filledStars.length === 0) {
+        missingFields.push("Filled Stars");
+    }
+
+    // If there are missing fields, display an alert with the list of missing fields
+    if (missingFields.length > 0) {
+        const missingFieldsMessage = "Please fill in the following fields before sending the review:\n- " + missingFields.join("\n- ");
+        alert(missingFieldsMessage);
+        return;
+    }
 
     function translateStarCount() {
         const starImages = document.querySelectorAll('.ryp__star__button img');
