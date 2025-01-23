@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Amazon Review Helper (Updated)
+// @name         Vine Review Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1.7
+// @version      0.1.8
 // @description  Assistant in writing Reviews for Amazon, with a custom template inserter and review backups using Discord Webhooks.
 // @author       Wattie :3
 // @match        https://www.amazon.co.uk/review/create-review*
@@ -67,6 +67,15 @@
         .custom-settings-button {
             background-color: #e67e22 !important;
             border: 1px solid #d35400 !important;
+        }
+
+        .in-context-ryp__form_fields_container-desktop {
+            display: grid;
+            grid-auto-rows: max-content;
+        }
+
+        .in-context-ryp__form-field-container:last-child {
+            grid-row: 1 !important;
         }
     `);
 
@@ -168,7 +177,7 @@
             }]
         }),
         onload: function(response) {
-            alert("Your review has been successfully sent to Discord & archived.");
+            alert("Your review has been successfully sent to Discord.");
         },
         onerror: function(error) {
             console.error("Uh oh! There's been an error sending your review to Discord: ", error);
