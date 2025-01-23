@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon Review Helper (Updated)
 // @namespace    http://tampermonkey.net/
-// @version      0.1.6
+// @version      0.1.7
 // @description  Assistant in writing Reviews for Amazon, with a custom template inserter and review backups using Discord Webhooks.
 // @author       Wattie :3
 // @match        https://www.amazon.co.uk/review/create-review*
@@ -116,44 +116,66 @@
         }
     }
 
-    function sendToDiscord(event) {
-        event.preventDefault();
+   function sendToDiscord(event) {
+    event.preventDefault();
 
-        const discordWebhookUrl = GM_getValue("discordWebhookUrl", "");
-        const reviewText = document.querySelector('textarea#reviewText').value;
-        const productTitle = document.querySelector('span.in-context-ryp__product-title').innerText;
-        const productImage = document.querySelector('div[data-testid="in-context-ryp__product-header"] img').getAttribute('src');
-        const reviewTitle = document.querySelector('input.a-input-text.in-context-ryp__form-field--reviewTitle').value;
+    const discordWebhookUrl = GM_getValue("discordWebhookUrl", "");
+    const webhookName = "Vine Review Archiver";
+    const webhookAvatarUrl = "https://raw.githubusercontent.com/wattsoner/Vine-Review-Helper/main/images/Vine-Logo.png";
+    const reviewText = document.querySelector('textarea#reviewText').value;
+    const productLink = window.location.href;
+    const productImage = document.querySelector('div[data-testid="in-context-ryp__product-header"] img').getAttribute('src');
+    const reviewTitle = document.querySelector('input.a-input-text.in-context-ryp__form-field--reviewTitle').value;
 
-        if (!discordWebhookUrl || !reviewText || !productTitle || !productImage || !reviewTitle) {
-            alert("Please ensure all required fields (Webhook URL, Review Title, Review Text, Product Title, Product Image) are filled.");
-            return;
-        }
-
-        GM_xmlhttpRequest({
-            method: "POST",
-            url: discordWebhookUrl,
-            headers: {"Content-Type": "application/json"},
-            data: JSON.stringify({
-                content: "Review archived:",
-                embeds: [{
-                    title: `${reviewTitle} - ${productTitle}`,
-                    description: reviewText,
-                    color: 5025616,
-                    image: { url: productImage },
-                    footer: {
-                        text: "Posted on: " + new Date().toLocaleString()
-                    }
-                }]
-            }),
-            onload: function() {
-                alert("Review successfully sent to Discord!");
-            },
-            onerror: function(error) {
-                console.error("Error sending review to Discord:", error);
-            }
-        });
+    if (!discordWebhookUrl || !reviewText || !productLink || !productImage || !reviewTitle) {
+        alert("Please ensure all required fields (Webhook URL, Review Title, Review Text, Product Link, Product Image) are filled.");
+        return;
     }
+
+    GM_xmlhttpRequest({
+        method: "POST",
+        url: discordWebhookUrl,
+        headers: {"Content-Type": "application/json"},
+        data: JSON.stringify({
+            username: webhookName,
+            avatar_url: webhookAvatarUrl,
+            embeds: [{
+                title: "Here's your Review!",
+                fields: [
+                    {
+                        name: "Review Link",
+                        value: `[here](${productLink})`,
+                        inline: false
+                    },
+                    {
+                        name: "Title",
+                        value: reviewTitle,
+                        inline: false
+                    },
+                    {
+                        name: "Review",
+                        value: reviewText.length > 1024 ? reviewText.substring(0, 1021) + "..." : reviewText,
+                        inline: false
+                    }
+                ],
+                footer: {
+                    text: `Posted on ${new Date().toLocaleString()}, made by @wattie`
+                },
+                color: 5025616,
+                thumbnail: {
+                    url: productImage
+                }
+            }]
+        }),
+        onload: function(response) {
+            alert("Your review has been successfully sent to Discord & archived.");
+        },
+        onerror: function(error) {
+            console.error("Uh oh! There's been an error sending your review to Discord: ", error);
+        }
+    });
+}
+
 
     function toggleSettingsDropdown() {
         settingsDropdown.style.display = settingsDropdown.style.display === "block" ? "none" : "block";
